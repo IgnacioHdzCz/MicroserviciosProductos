@@ -3,6 +3,7 @@ package com.springcloud.app.oauth.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,6 +22,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired // Para poder autenticarse
     private UserDetailsService usuarioService;
 	
+	@Autowired
+	private AuthenticationEventPublisher eventPublisher;
+	
 	//Correcto
 
 	@Override
@@ -37,7 +41,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		password(passwordEncoder().encode("12345")).
 		//password(passwordEncoder().encode("config.security.oauth.client.secret")).
 		roles("USER");
-		auth.userDetailsService(this.usuarioService).passwordEncoder(passwordEncoder());
+		auth.userDetailsService(this.usuarioService).passwordEncoder(passwordEncoder()).
+		and().authenticationEventPublisher(eventPublisher);
 		
 	}
 	
