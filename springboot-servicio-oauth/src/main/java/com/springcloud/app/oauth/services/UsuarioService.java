@@ -20,37 +20,46 @@ import com.springcloud.app.oauth.clients.UsuarioFeignClient;
 import feign.FeignException.FeignClientException;
 
 @Service
-public class UsuarioService implements IUsuarioService,UserDetailsService {
+public class UsuarioService implements IUsuarioService, UserDetailsService {
 	private Logger log = LoggerFactory.getLogger(UsuarioService.class);
 
 	@Autowired
 	private UsuarioFeignClient client;
-	
+
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Usuario usuario = null;
-		
-			 usuario = client.findByUsername(username);
-			if(usuario == null) {
-				log.error("Error en el login, no existe el usuario '" + username + "' en el sistema");
-				throw new UsernameNotFoundException("Error en el login, no existe el usuario '" + username + "' en el sistema");
-			}
-	
-		
-		
-		List<GrantedAuthority> authorities = usuario.getRoles()
-				.stream()
-				.map(role -> new SimpleGrantedAuthority(role.getNombre()))
-				.peek(authority -> log.info("Role: " + authority.getAuthority()))
-				.collect(Collectors.toList());
-		log.info("Usuario autenticado : " + username);
-		return new User(usuario.getUsername(), usuario.getPassword(), usuario.getEnabled(), true,
-				true, true, authorities);
+		// Usuario usuario = null;
+
+		try {
+
+			Usuario usuario = client.findByUsername(username);
+//			if (usuario == null) {
+//
+//			}
+
+			List<GrantedAuthority> authorities = usuario.getRoles().stream()
+					.map(role -> new SimpleGrantedAuthority(role.getNombre()))
+					.peek(authority -> log.info("Role: " + authority.getAuthority())).collect(Collectors.toList());
+			log.info("Usuario autenticado : " + username);
+			return new User(usuario.getUsername(), usuario.getPassword(), usuario.getEnabled(), true, true, true,
+					authorities);
+		} catch (FeignClientException e) {
+			log.error("Error en el login, no existe el usuario '" + username + "' en el sistema");
+			throw new UsernameNotFoundException(
+					"Error en el login, no existe el usuario '" + username + "' en el sistema");
+
+		}
 	}
 
-	//metodo	de IUsuarioService
+	// metodo de IUsuarioService
 	public Usuario findByUsername(String username) {
 
 		return client.findByUsername(username);
+	}
+
+	@Override
+	public Usuario update(Usuario usuario, Long id) {
+		// TODO Auto-generated method stub
+		return client.update(usuario, id);
 	}
 }

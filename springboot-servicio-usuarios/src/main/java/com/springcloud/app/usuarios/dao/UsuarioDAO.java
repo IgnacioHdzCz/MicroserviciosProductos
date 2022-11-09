@@ -23,4 +23,6 @@ public interface UsuarioDAO extends PagingAndSortingRepository<Usuario, Long>{
 //		public Usuario obtenerPorUsername(String username,String email);
 		@Query(value="SELECT * FROM USUARIOS  WHERE USERNAME = ?1",nativeQuery = true)
 		public Usuario obtenerPorUsername(String username);
+		
+
 }
