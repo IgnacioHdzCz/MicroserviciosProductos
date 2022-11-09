@@ -25,7 +25,8 @@ public class JwtAuthenticationFilter implements WebFilter{
 				.switchIfEmpty(chain.filter(exchange).then(Mono.empty()))
 				.map(token -> token.replace("Bearer ", ""))
 				.flatMap(token -> authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(null, token)))
-				.flatMap(authentication -> chain.filter(exchange).contextWrite(ReactiveSecurityContextHolder.withAuthentication(authentication)));
+				.flatMap(authentication -> chain.filter(exchange)
+				.contextWrite(ReactiveSecurityContextHolder.withAuthentication(authentication)));
 	}
 
 }

@@ -10,7 +10,7 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 
 @EnableWebFluxSecurity
 public class SpringSecurityConfig {
-	
+
 	@Autowired
 	private JwtAuthenticationFilter authenticationFilter;
 
@@ -18,17 +18,19 @@ public class SpringSecurityConfig {
 	public SecurityWebFilterChain configure(ServerHttpSecurity http) {
 		return http.authorizeExchange()
 				.pathMatchers("/api/security/oauth/**").permitAll()
-				.pathMatchers(HttpMethod.GET, "/api/productos/listar",
-						"/api/items/listar",
+				.pathMatchers(HttpMethod.GET, 
+						"/api/productos/listar", "/api/items/listar", 
 						"/api/usuarios/usuarios",
 						"/api/items/ver/{id}/cantidad/{cantidad}",
-						"/api/productos/ver/{id}").permitAll()
-				.pathMatchers(HttpMethod.GET, "/api/usuarios/usuarios/{id}").hasAnyRole("ADMIN", "USER")
-				.pathMatchers("/api/productos/**", "/api/items/**", "/api/usuarios/usuarios/**").hasRole("ADMIN")
-				.anyExchange().authenticated()
-				.and().addFilterAt(authenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION)
-				.csrf().disable()
-				.build();
+						"/api/productos/ver/{id}")
+				.permitAll().pathMatchers
+	(HttpMethod.GET, "/api/usuarios/usuarios/{id}").hasAnyRole("ADMIN", "USER")
+				.pathMatchers("/api/productos/**", 
+						      "/api/items/**", 
+						      "/api/usuarios/usuarios/**").hasRole("ADMIN")
+				.anyExchange().authenticated().and()
+				.addFilterAt(authenticationFilter, 
+						SecurityWebFiltersOrder.AUTHENTICATION).csrf().disable().build();
 	}
-	
+
 }

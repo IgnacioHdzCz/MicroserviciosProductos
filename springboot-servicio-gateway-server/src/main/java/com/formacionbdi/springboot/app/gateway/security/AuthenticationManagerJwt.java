@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,11 +21,13 @@ import reactor.core.publisher.Mono;
 @Component
 public class AuthenticationManagerJwt implements ReactiveAuthenticationManager{
 
-	@Value("${config.security.oauth.jwt.key}")
-	private String llaveJwt;
+	//@Value("${config.security.oauth.jwt.key}") //servidor de configuraciones
+	private String llaveJwt = "algun_codigo_secreto_aeiou";
+	
+	//Por debajo se manda a llamar el metodo subcribe
 	
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // en authentication se obtiene el token
 	public Mono<Authentication> authenticate(Authentication authentication) {
 		return Mono.just(authentication.getCredentials().toString())
 				.map(token -> {
