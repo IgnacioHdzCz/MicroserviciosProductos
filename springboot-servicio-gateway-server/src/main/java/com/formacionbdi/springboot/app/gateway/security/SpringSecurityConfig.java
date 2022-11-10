@@ -19,7 +19,8 @@ public class SpringSecurityConfig {
 		return http.authorizeExchange()
 				.pathMatchers("/api/security/oauth/**").permitAll()
 				.pathMatchers(HttpMethod.GET, 
-						"/api/productos/listar", "/api/items/listar", 
+						"/api/productos/listar", 
+						"/api/items/listar", 
 						"/api/usuarios/usuarios",
 						"/api/items/ver/{id}/cantidad/{cantidad}",
 						"/api/productos/ver/{id}")
