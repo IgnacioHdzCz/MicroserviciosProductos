@@ -45,8 +45,8 @@ public class ItemController {
 	// @Qualifier("serviceRestTemplate")
 	private ItemService itemService;
 
-	@Value("${configuracion.texto}")
-	private String texto;
+	//@Value("${configuracion.texto}")
+	private String texto = "texto";
 
 	@Autowired
 	private CircuitBreakerFactory cbFactory;
